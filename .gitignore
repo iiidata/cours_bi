@@ -1,0 +1,17 @@
+elasticsearch_data/*
+postgres_data/*
+filebeat_data/*
+rabbitmq_data/*
+rundeck_data/*
+airflow_*/*
+sqlbak_local_data/*
+dags/__*
+/*/github_key
+dags/*.*save
+/airflow_config/*.*.save
+*.ppk
+/private_ovh
+/.idea
+iiicrowler_logs/*
+**/.DS_Store
+outputs_reports/*

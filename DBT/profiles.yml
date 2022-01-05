@@ -1,0 +1,34 @@
+dwh:
+
+  outputs:
+    dev:
+      type: postgres
+      threads: 2
+      host: "{{ var('DBT_HOST') }}"
+      port: 5432
+      user: "{{ var('DBT_USER') }}"
+      pass: "{{ var('DBT_PASSWORD') }}"
+      dbname: iiicomm_dwh
+      schema: dbt
+
+    uat:
+      type: postgres
+      threads: 2
+      host: localhost
+      port: 5432
+      user: "{{ var('DBT_USER') }}"
+      pass: "{{ var('DBT_PASSWORD') }}"
+      dbname: iiicomm_dwh
+      schema: dbt
+
+    prod:
+      type: postgres
+      threads: 4
+      host: localhost
+      port: 5432
+      user: "{{ var('DBT_USER') }}"
+      pass: "{{ var('DBT_PASSWORD') }}"
+      dbname: iiicomm_dwh
+      schema: dbt
+
+  target: "{{ env_var('IIICOMM_ENV') }}"
