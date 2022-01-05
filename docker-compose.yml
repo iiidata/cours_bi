@@ -286,18 +286,18 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
-  dbt:
-    container_name: dbt-cours
-    build:
-      context: DBT/
-      dockerfile: Dockerfile
-      args:
-        - CRYPTOGRAPHY_KEY=$CRYPTOGRAPHY_KEY
-        - ENV=$ENV
-    volumes:
-      - ${referentials_files}:/referentials
-    networks:
-      - host
+  # dbt:
+  #   container_name: dbt-cours
+  #   build:
+  #     context: DBT/
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - CRYPTOGRAPHY_KEY=$CRYPTOGRAPHY_KEY
+  #       - ENV=$ENV
+  #   volumes:
+  #     - ${referentials_files}:/referentials
+  #   networks:
+  #     - host
 
   airbyte-init:
     container_name: airbyte-init-cours
