@@ -12,6 +12,56 @@ dags/*.*save
 *.ppk
 /private_ovh
 /.idea
-iiicrowler_logs/*
-**/.DS_Store
-outputs_reports/*
+
+
+data/*.csv
+data/*.txt
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Scrapy stuff:
+.scrapy
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+data/
+logs/
+.idea/
+
+smaag_api_wrappers/venv/*
+smaag_api_wrappers/.idea/*
+
+
