@@ -2320,3 +2320,37 @@
 2022-01-07 15:08:57,620 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENARLEQUIN/stoptimes HTTP/1.1" 200 None
 2022-01-07 15:08:57,623 :: DEBUG :: call cluster : SEM:GENBRUYERE
 2022-01-07 15:08:57,626 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:24:47,058 :: INFO :: start collect stop time
+2022-01-07 15:27:17,432 :: INFO :: start collect stop time
+2022-01-07 15:27:17,447 :: DEBUG :: call cluster : SEM:GENLETOILE
+2022-01-07 15:27:17,449 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:19,153 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENLETOILE/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:19,155 :: DEBUG :: call cluster : SEM:GENCHANDON
+2022-01-07 15:27:19,157 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:19,562 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENCHANDON/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:19,564 :: DEBUG :: call cluster : SEM:GENDENPAPIN
+2022-01-07 15:27:19,566 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:19,845 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENDENPAPIN/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:19,847 :: DEBUG :: call cluster : SEM:GENADELAUNE
+2022-01-07 15:27:19,850 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:20,098 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENADELAUNE/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:20,100 :: DEBUG :: call cluster : SEM:GENMARIECUR
+2022-01-07 15:27:20,103 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:20,363 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENMARIECUR/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:20,365 :: DEBUG :: call cluster : SEM:GENRAMPE
+2022-01-07 15:27:20,368 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:20,630 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENRAMPE/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:20,633 :: DEBUG :: call cluster : SEM:GENECHIGARE
+2022-01-07 15:27:20,636 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:20,871 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENECHIGARE/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:20,873 :: DEBUG :: call cluster : SEM:GENESSARTS
+2022-01-07 15:27:20,875 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:21,128 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENESSARTS/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:21,131 :: DEBUG :: call cluster : SEM:GENSURIEUX
+2022-01-07 15:27:21,133 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:21,384 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENSURIEUX/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:21,387 :: DEBUG :: call cluster : SEM:GENGRANGES
+2022-01-07 15:27:21,389 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 15:27:21,615 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENGRANGES/stoptimes HTTP/1.1" 200 None
+2022-01-07 15:27:21,618 :: DEBUG :: call cluster : SEM:GENPOLESUD
+2022-01-07 15:27:21,621 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443

@@ -183,7 +183,7 @@ def get_semitag_stop_times():
     data = []
     for clust in lineclusters:
         call_datetime = datetime.datetime.now()
-        logger.debug(f'call cluster : {clust}')
+        # logger.debug(f'call cluster : {clust}')
         try:
 
             content = call_api(SMMAG_ENDPOINTS.get('cluster_stoptimes').format(cluster_id=clust), headers=headers)

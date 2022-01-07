@@ -59,3 +59,5 @@ logs/
 smaag_api_wrappers/venv/*
 smaag_api_wrappers/.idea/*
 smaag_api_wrappers/temp_files
+smaag_api_wrappers/data/*
+smaag_api_wrappers/logs/*
