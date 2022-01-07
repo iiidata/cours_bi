@@ -16,7 +16,7 @@ from logging import StreamHandler
 from logging.handlers import TimedRotatingFileHandler
 
 from enquete_parser import EnqueteParser
-
+import argparse
 
 from sqlalchemy import create_engine
 
@@ -189,7 +189,7 @@ def get_semitag_stop_times():
         df_lineclusters = pd.read_csv(path, sep=',')
         ## limit at SEMA
         df_lineclusters = df_lineclusters[df_lineclusters['code'].str.contains('SEM:', na=True)]
-        df_lineclusters  = df_lineclusters
+        # df_lineclusters  = df_lineclusters.head(5)
     lineclusters = df_lineclusters['code'].drop_duplicates().tolist()
     headers = {
         'origin': 'campus_num'
@@ -307,19 +307,37 @@ def process_file_enquete(f,dest):
     df_updown_per_cluster_and_mode.to_csv(f3, index=False, mode='w')
     df.to_sql('updown_per_cluster_and_mode', engine, if_exists='append')
 
+def prepare_arguments():
+
+    parser = argparse.ArgumentParser(
+        description="wrapper integration services", formatter_class=argparse.RawTextHelpFormatter)
+
+    # job management
+    parser.add_argument('--job', '-j', type=str, required=True,
+                        help='choose function')
+
+    return parser
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    logger.info('start collect stop time')
-    start = datetime.datetime.now()
+    # parse args
+    parser = prepare_arguments()
+    required, extra = parser.parse_known_args(sys.argv[1:])
+    args = vars(required)
+    logger.info(f"Required arguments passed : {required}")
 
-    get_semitag_stop_times()
-    end = datetime.datetime.now() - start
-    logger.info(f'finish collect stop duration: {end}')
-    logger.info('start pase enquetes')
-    start = datetime.datetime.now()
-    parse_enquetes()
-    end = datetime.datetime.now()
-    logger.info(f'finish parse stop time : {end}')
+    if args.get('job') == 'get_semitag_stop_times':
 
+        logger.info('start collect stop time')
+        start = datetime.datetime.now()
+        get_semitag_stop_times()
+        end = datetime.datetime.now() - start
+        logger.info(f'finish collect stop duration: {end}')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    if args.get('job') == 'parse_enquetes':
+
+        logger.info('start pase enquetes')
+        start = datetime.datetime.now()
+        parse_enquetes()
+        end = datetime.datetime.now()
+        logger.info(f'finish parse stop time : {end}')

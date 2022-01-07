@@ -23,6 +23,7 @@ files_path = Variable.get("referential_files", deserialize_json=True)
 with DAG('wrapper', default_args=default_args, schedule_interval='*/30 * * * *', catchup=False) as dag:
     date = now.strftime(DATE_FORMAT)
     logging.info(files_path)
+
     get_semitag_stop_times = DockerOperator(
         task_id='get_semitag_stop_times',
         image='cours_wrappers',
@@ -30,6 +31,7 @@ with DAG('wrapper', default_args=default_args, schedule_interval='*/30 * * * *',
         auto_remove=True,
         docker_url='tcp://docker-proxy:2375',
         network_mode='host',
+        command='--job get_semitag_stop_times',
         mounts=[
             Mount(
                 source=files_path.get("data"),
@@ -38,9 +40,32 @@ with DAG('wrapper', default_args=default_args, schedule_interval='*/30 * * * *',
             ),
             Mount(
                 source=files_path.get("log"),
-                target='/logs',
+                target='/wrappers/logs',
                 type='bind'
             )
         ]
     )
     get_semitag_stop_times
+
+    parse_enquetes = DockerOperator(
+        task_id='parse_enquetes',
+        image='cours_wrappers',
+        container_name=f'parse_enquetes-{date}',
+        auto_remove=True,
+        docker_url='tcp://docker-proxy:2375',
+        network_mode='host',
+        command=f'--job parse_enquetes',
+        mounts=[
+            Mount(
+                source=files_path.get("data"),
+                target='/data',
+                type='bind'
+            ),
+            Mount(
+                source=files_path.get("log"),
+                target='/wrappers/logs',
+                type='bind'
+            )
+        ]
+    )
+    parse_enquetes

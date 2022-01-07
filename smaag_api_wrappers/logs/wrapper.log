@@ -1,14 +1,45 @@
-2022-01-07 17:11:14,746 :: INFO :: start collect stop time
-2022-01-07 17:11:14,746 :: DEBUG :: /home/romain/Desktop/Cours/smaag_api_wrappers/data/smmag_line_clusters.csv
-2022-01-07 17:11:14,766 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
-2022-01-07 17:11:15,721 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENLETOILE/stoptimes HTTP/1.1" 200 None
-2022-01-07 17:11:15,726 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
-2022-01-07 17:11:16,050 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENCHANDON/stoptimes HTTP/1.1" 200 None
-2022-01-07 17:11:16,056 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
-2022-01-07 17:11:16,357 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENDENPAPIN/stoptimes HTTP/1.1" 200 None
-2022-01-07 17:11:16,362 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
-2022-01-07 17:11:16,602 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENADELAUNE/stoptimes HTTP/1.1" 200 None
-2022-01-07 17:11:16,608 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
-2022-01-07 17:11:16,844 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENMARIECUR/stoptimes HTTP/1.1" 200 None
-2022-01-07 17:11:16,887 :: INFO :: finish collect stop duration: 0:00:02.141173
-2022-01-07 17:11:16,887 :: INFO :: start pase enquetes
+2022-01-07 17:04:36,209 :: INFO :: Required arguments passed : Namespace(job='get_semitag_stop_times')
+2022-01-07 17:04:36,209 :: INFO :: start collect stop time
+2022-01-07 17:04:36,209 :: DEBUG :: /wrappers/data/smmag_line_clusters.csv
+2022-01-07 17:04:36,231 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:04:36,250 :: INFO :: Required arguments passed : Namespace(job='parse_enquetes')
+2022-01-07 17:04:36,941 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENLETOILE/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:04:36,947 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:04:37,186 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENCHANDON/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:04:37,191 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:04:37,442 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENDENPAPIN/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:04:37,448 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:04:37,703 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENADELAUNE/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:04:37,709 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:04:37,936 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENMARIECUR/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:04:38,011 :: INFO :: finish collect stop duration: 0:00:01.802152
+2022-01-07 17:06:50,984 :: INFO :: Required arguments passed : Namespace(job='get_semitag_stop_times')
+2022-01-07 17:06:50,984 :: INFO :: start collect stop time
+2022-01-07 17:06:50,985 :: DEBUG :: /wrappers/data/smmag_line_clusters.csv
+2022-01-07 17:06:51,008 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:51,699 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENLETOILE/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:51,704 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:51,949 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENCHANDON/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:51,954 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:52,231 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENDENPAPIN/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:52,236 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:52,488 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENADELAUNE/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:52,493 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:52,749 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENMARIECUR/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:52,807 :: INFO :: finish collect stop duration: 0:00:01.822749
+2022-01-07 17:06:55,007 :: INFO :: Required arguments passed : Namespace(job='parse_enquetes')
+2022-01-07 17:06:55,007 :: INFO :: start pase enquetes
+2022-01-07 17:06:55,059 :: INFO :: Required arguments passed : Namespace(job='get_semitag_stop_times')
+2022-01-07 17:06:55,060 :: INFO :: start collect stop time
+2022-01-07 17:06:55,060 :: DEBUG :: /wrappers/data/smmag_line_clusters.csv
+2022-01-07 17:06:55,083 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:56,614 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENLETOILE/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:56,619 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:56,874 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENCHANDON/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:56,880 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:57,123 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENDENPAPIN/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:57,128 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:57,398 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENADELAUNE/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:57,404 :: DEBUG :: Starting new HTTPS connection (1): data.mobilites-m.fr:443
+2022-01-07 17:06:57,667 :: DEBUG :: https://data.mobilites-m.fr:443 "GET /api/routers/default/index/clusters/SEM:GENMARIECUR/stoptimes HTTP/1.1" 200 None
+2022-01-07 17:06:57,724 :: INFO :: finish collect stop duration: 0:00:02.664332
