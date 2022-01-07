@@ -24,9 +24,14 @@ sudo systemctl restart docker.service
 ```
 
 
+# Docker install on linux
+Depuis l'interface de dooker aller dans :
+ - settings -> expose deamon
+ - apply & restart
 ## Using a newer stack version
 
-Tous les parametres de docker sont dans le `.env`
+Tous les parametres de docker sont dans le [`.env`](/.env) il faut le modifier celon votre config notamment a variable referentials_files
+Céer le fichier data
 
 ## airflow
 

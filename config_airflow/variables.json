@@ -7,6 +7,7 @@
     "DBT_USER": "user"
   },
   "referential_files": {
-    "data": "/home/romain/Desktop/Cours/smaag_api_wrappers/data"
+    "data": "/home/romain/Desktop/Cours/smaag_api_wrappers/data",
+    "log": "/home/romain/Desktop/Cours/smaag_api_wrappers/logs"
   }
 }

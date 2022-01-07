@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 from airflow.models import Variable
 from airflow.operators.docker_operator import DockerOperator
 from docker.types import Mount
-
+import logging
 now = datetime.now()
-DATE_FORMAT = "%Y-%m-%d' '%H:%M"
+DATE_FORMAT = "%Y-%m-%d_%H-%M"
 
 default_args = {
         'owner': 'airflow',
@@ -20,12 +20,13 @@ default_args = {
 files_path = Variable.get("referential_files", deserialize_json=True)
 # external sensor devraient verifier quie les job dim_quotien et dim_hebdo sont bien finis
 
-with DAG('call_wrapper', default_args=default_args, schedule_interval=None, catchup=False) as dag:
+with DAG('wrapper', default_args=default_args, schedule_interval='*/30 * * * *', catchup=False) as dag:
     date = now.strftime(DATE_FORMAT)
-    cours_wrappers = DockerOperator(
-        task_id='cours_wrappers',
+    logging.info(files_path)
+    get_semitag_stop_times = DockerOperator(
+        task_id='get_semitag_stop_times',
         image='cours_wrappers',
-        container_name=f'cours_wrappers-{date}',
+        container_name=f'get_semitag_stop_times-{date}',
         auto_remove=True,
         docker_url='tcp://docker-proxy:2375',
         network_mode='host',
@@ -34,7 +35,12 @@ with DAG('call_wrapper', default_args=default_args, schedule_interval=None, catc
                 source=files_path.get("data"),
                 target='/data',
                 type='bind'
+            ),
+            Mount(
+                source=files_path.get("log"),
+                target='/logs',
+                type='bind'
             )
         ]
     )
-    cours_wrappers
+    get_semitag_stop_times

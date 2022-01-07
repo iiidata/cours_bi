@@ -17,5 +17,5 @@ COPY . wrappers/
 RUN pip install -r wrappers/requirements.txt
 
 ENV PYTHONPATH="wrappers"
-
+ENV environment=docker
 ENTRYPOINT ["python","./wrappers/main.py"]

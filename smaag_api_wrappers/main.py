@@ -17,6 +17,9 @@ from logging.handlers import TimedRotatingFileHandler
 
 from enquete_parser import EnqueteParser
 
+
+from sqlalchemy import create_engine
+
 ############### LOGGING file #############
 logger = logging.getLogger()
 LOG_LEVEL = logging.INFO
@@ -48,6 +51,16 @@ SMMAG_ENDPOINTS = {
 
 PATH_FILE = 'data'
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+
+############### Database connection #############
+if (os.getenv('environment') or 'dev') == 'dev':
+    address = 'postgresql://user:pass_postgres@localhost:5432/cours'
+else:
+    address = 'postgresql://user:pass_postgres@localhost:5432/cours'
+
+engine = create_engine(address)
+connection = engine.raw_connection()
+cursor = connection.cursor()
 
 def call_api(endpoint, **kwargs):
 
@@ -171,10 +184,12 @@ def get_referentials():
 
 def get_semitag_stop_times():
     path = os.path.join(basedir, PATH_FILE, 'smmag_line_clusters.csv')
+    logger.debug(path)
     if os.path.exists(path):
-        df_lineclusters = pd.read_csv(path)
+        df_lineclusters = pd.read_csv(path, sep=',')
         ## limit at SEMA
         df_lineclusters = df_lineclusters[df_lineclusters['code'].str.contains('SEM:', na=True)]
+        df_lineclusters  = df_lineclusters.head(5)
     lineclusters = df_lineclusters['code'].drop_duplicates().tolist()
     headers = {
         'origin': 'campus_num'
@@ -235,14 +250,15 @@ def get_semitag_stop_times():
         except Exception as e:
             logger.info(e)
     df = pd.DataFrame(data)
-    path = os.path.join(basedir, PATH_FILE, 'smmag_line_clusters.csv')
+    path = os.path.join(basedir, PATH_FILE, 'stops_realtime.csv')
     df.to_csv(path, index=False, mode='a')
+    df.to_sql('stops_realtime', engine, if_exists='append')
 
 
 def parse_enquetes():
 
-    # enquetes_dir = 'enquetes/'
-    enquetes_dir = ''
+    enquetes_dir = 'enquetes/'
+    # enquetes_dir = ''
     dest = os.path.join(basedir, PATH_FILE ,'temp_files')
     d1 = os.path.join(dest, 'updown_per_cluster_inout')
     d2 = os.path.join(dest, 'updown_per_cluster_and_semline')
@@ -285,16 +301,20 @@ def process_file_enquete(f,dest):
     f2 = os.path.join(basedir, dest, 'updown_per_cluster_and_semline', f'{filename}.csv')
     f3 = os.path.join(basedir, dest, 'updown_per_cluster_and_mode', f'{filename}.csv')
     df_updown_per_cluster.to_csv(f1, index=False, mode='w')
+    df.to_sql('updown_per_cluster_inout', engine, if_exists='append')
     df_updown_per_cluster_and_semline.to_csv(f2, index=False, mode='w')
+    df.to_sql('updown_per_cluster_and_semline', engine, if_exists='append')
     df_updown_per_cluster_and_mode.to_csv(f3, index=False, mode='w')
+    df.to_sql('updown_per_cluster_and_mode', engine, if_exists='append')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     logger.info('start collect stop time')
     start = datetime.datetime.now()
+
     get_semitag_stop_times()
-    end = datetime.datetime.now()
-    logger.info(f'finish collect stop time : {end}')
+    end = datetime.datetime.now() - start
+    logger.info(f'finish collect stop duration: {end}')
     logger.info('start pase enquetes')
     start = datetime.datetime.now()
     parse_enquetes()
