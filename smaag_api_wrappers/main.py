@@ -189,7 +189,7 @@ def get_semitag_stop_times():
         df_lineclusters = pd.read_csv(path, sep=',')
         ## limit at SEMA
         df_lineclusters = df_lineclusters[df_lineclusters['code'].str.contains('SEM:', na=True)]
-        df_lineclusters  = df_lineclusters.head(5)
+        df_lineclusters  = df_lineclusters
     lineclusters = df_lineclusters['code'].drop_duplicates().tolist()
     headers = {
         'origin': 'campus_num'
