@@ -1,8 +1,4 @@
-elasticsearch_data/*
 postgres_data/*
-filebeat_data/*
-rabbitmq_data/*
-rundeck_data/*
 airflow_*/*
 sqlbak_local_data/*
 dags/__*
@@ -49,7 +45,6 @@ __pycache__/
 .python-version
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -64,5 +59,3 @@ logs/
 smaag_api_wrappers/venv/*
 smaag_api_wrappers/.idea/*
 smaag_api_wrappers/temp_files
-
-

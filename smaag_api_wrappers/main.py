@@ -7,6 +7,7 @@ import glob
 import json
 import multiprocessing
 import os
+import sys
 
 import pandas as pd
 import requests
@@ -25,6 +26,8 @@ SMMAG_ENDPOINTS = {
     'cluster_stoptimes':'/api/routers/default/index/clusters/{cluster_id}/stoptimes'
 }
 
+PATH_FILE = {'SMAAG' : 'SMAAG'}
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 def call_api(endpoint, **kwargs):
 
@@ -120,7 +123,7 @@ def get_referentials():
     stop_occupancy_file = 'smmag_stop_occupancy.csv'
     cities_file = 'cities.csv'
 
-    if os.path.exists(lines_file):
+    if os.path.exists(os.path.join(basedir, PATH_FILE.get('SMAAG'), lines_file) ):
         df_lines = pd.read_csv(lines_file)
     else:
         df_lines = get_lines()
@@ -138,7 +141,7 @@ def get_referentials():
     # df_line_schedules = get_schedules(df_lines['id'].tolist())
     # df_line_schedules.to_csv(line_schedules_file, index=False)
 
-    if os.path.exists(line_stops_file):
+    if os.path.exists(os.path.join(basedir, PATH_FILE.get('SMAAG'), line_stops_file) ):
         df_linestops = pd.read_csv(line_stops_file)
 
     linestops = df_linestops['id'].drop_duplicates().tolist()
@@ -147,10 +150,12 @@ def get_referentials():
 
 
 def get_semitag_stop_times():
-    if os.path.exists('smmag_line_clusters.csv'):
-        df_lineclusters = pd.read_csv('smmag_line_clusters.csv')
+    path = os.path.join(basedir, PATH_FILE.get('SMAAG'), 'smmag_line_clusters.csv')
+    if os.path.exists(path):
+        df_lineclusters = pd.read_csv(path)
+        ## limit at SEMA
+        df_lineclusters[df_lineclusters['code'].str.contains('SEM:', na=True)]
     lineclusters = df_lineclusters['code'].drop_duplicates().tolist()
-
     headers = {
         'origin': 'campus_num'
     }
@@ -211,11 +216,11 @@ def get_semitag_stop_times():
 
 def parse_enquetes():
 
-    enquetes_dir = 'C:/WORKSPACE/cours_bi/data/enquetes/'
-    dest = os.path.join(os.path.abspath(os.curdir),'temp_files')
-    d1 = os.path.join(dest, 'updown_per_cluster_inout')
-    d2 = os.path.join(dest, 'updown_per_cluster_and_semline')
-    d3 = os.path.join(dest, 'updown_per_cluster_and_mode')
+    enquetes_dir = 'data/enquetes/'
+    dest = os.path.join(basedir, os.path.join(basedir, os.curdir),'temp_files')
+    d1 = os.path.join(basedir, dest, 'updown_per_cluster_inout')
+    d2 = os.path.join(basedir, dest, 'updown_per_cluster_and_semline')
+    d3 = os.path.join(basedir, dest, 'updown_per_cluster_and_mode')
 
     os.makedirs(dest, exist_ok=True)
     os.makedirs(d1, exist_ok=True)
@@ -226,23 +231,23 @@ def parse_enquetes():
     for filename in os.listdir(enquetes_dir):
         # launch a process for each file (ish).
         # The result will be approximately one process per CPU core available.
-        f = os.path.join(enquetes_dir, filename)
+        f = os.path.join(basedir, enquetes_dir, filename)
         p.apply_async(process_file_enquete, [f,dest])
 
     p.close()
     p.join()  # Wait for all child processes to close.
 
-    all_filenames = [i for i in glob.glob(os.path.join(dest,'updown_per_cluster_inout','*.csv'))]
+    all_filenames = [i for i in glob.glob(os.path.join(basedir, dest,'updown_per_cluster_inout','*.csv'))]
     combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
-    combined_csv.to_csv(os.path.join("updown_per_cluster_inout.csv"), index=False, encoding='utf-8')
+    combined_csv.to_csv(os.path.join(basedir, "updown_per_cluster_inout.csv"), index=False, encoding='utf-8')
 
-    all_filenames = [i for i in glob.glob(os.path.join(dest, 'updown_per_cluster_and_semline','*.csv'))]
+    all_filenames = [i for i in glob.glob(os.path.join(basedir, dest, 'updown_per_cluster_and_semline','*.csv'))]
     combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
-    combined_csv.to_csv(os.path.join("updown_per_cluster_and_semline.csv"), index=False, encoding='utf-8')
+    combined_csv.to_csv(os.path.join(basedir, "updown_per_cluster_and_semline.csv"), index=False, encoding='utf-8')
 
-    all_filenames = [i for i in glob.glob(os.path.join(dest, 'updown_per_cluster_and_mode','*.csv'))]
+    all_filenames = [i for i in glob.glob(os.path.join(basedir, dest, 'updown_per_cluster_and_mode','*.csv'))]
     combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
-    combined_csv.to_csv(os.path.join("updown_per_cluster_and_mode.csv"), index=False, encoding='utf-8')
+    combined_csv.to_csv(os.path.join(basedir, "updown_per_cluster_and_mode.csv"), index=False, encoding='utf-8')
 
 
 def process_file_enquete(f,dest):
@@ -250,16 +255,16 @@ def process_file_enquete(f,dest):
     filename = os.path.basename(f).split('.')[0]
     ep = EnqueteParser(f)
     df_updown_per_cluster, df_updown_per_cluster_and_semline, df_updown_per_cluster_and_mode = ep.parse()
-    f1 = os.path.join(dest,'updown_per_cluster_inout',f'{filename}.csv')
-    f2 = os.path.join(dest, 'updown_per_cluster_and_semline', f'{filename}.csv')
-    f3 = os.path.join(dest, 'updown_per_cluster_and_mode', f'{filename}.csv')
+    f1 = os.path.join(basedir, dest,'updown_per_cluster_inout',f'{filename}.csv')
+    f2 = os.path.join(basedir, dest, 'updown_per_cluster_and_semline', f'{filename}.csv')
+    f3 = os.path.join(basedir, dest, 'updown_per_cluster_and_mode', f'{filename}.csv')
     df_updown_per_cluster.to_csv(f1, index=False, mode='w')
     df_updown_per_cluster_and_semline.to_csv(f2, index=False, mode='w')
     df_updown_per_cluster_and_mode.to_csv(f3, index=False, mode='w')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # get_semitag_stop_times()
+    get_semitag_stop_times()
     parse_enquetes()
 
 

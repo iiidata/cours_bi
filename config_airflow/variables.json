@@ -1,0 +1,12 @@
+{
+  "airflow_log_cleanup__max_log_age_in_days": 20,
+  "crawler_force_refresh": "True",
+  "dbt": {
+    "DBT_HOST": "localhost",
+    "DBT_PASSWORD": "pass_postgres",
+    "DBT_USER": "user"
+  },
+  "referential_files": {
+    "data": "/home/romain/Desktop/Cours/smaag_api_wrappers/data"
+  }
+}
