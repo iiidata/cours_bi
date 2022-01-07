@@ -3,11 +3,15 @@
 # Press Maj+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import datetime
+import glob
 import json
+import multiprocessing
 import os
 
 import pandas as pd
 import requests
+
+from enquete_parser import EnqueteParser
 
 API_SERVER = "https://data.mobilites-m.fr"
 
@@ -205,8 +209,58 @@ def get_semitag_stop_times():
     df.to_csv('cluster_stoptimes_realtime.csv', index=False, mode='a')
 
 
+def parse_enquetes():
+
+    enquetes_dir = 'C:/WORKSPACE/cours_bi/data/enquetes/'
+    dest = os.path.join(os.path.abspath(os.curdir),'temp_files')
+    d1 = os.path.join(dest, 'updown_per_cluster_inout')
+    d2 = os.path.join(dest, 'updown_per_cluster_and_semline')
+    d3 = os.path.join(dest, 'updown_per_cluster_and_mode')
+
+    os.makedirs(dest, exist_ok=True)
+    os.makedirs(d1, exist_ok=True)
+    os.makedirs(d2, exist_ok=True)
+    os.makedirs(d3, exist_ok=True)
+
+    p = multiprocessing.Pool()
+    for filename in os.listdir(enquetes_dir):
+        # launch a process for each file (ish).
+        # The result will be approximately one process per CPU core available.
+        f = os.path.join(enquetes_dir, filename)
+        p.apply_async(process_file_enquete, [f,dest])
+
+    p.close()
+    p.join()  # Wait for all child processes to close.
+
+    all_filenames = [i for i in glob.glob(os.path.join(dest,'updown_per_cluster_inout','*.csv'))]
+    combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
+    combined_csv.to_csv(os.path.join("updown_per_cluster_inout.csv"), index=False, encoding='utf-8')
+
+    all_filenames = [i for i in glob.glob(os.path.join(dest, 'updown_per_cluster_and_semline','*.csv'))]
+    combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
+    combined_csv.to_csv(os.path.join("updown_per_cluster_and_semline.csv"), index=False, encoding='utf-8')
+
+    all_filenames = [i for i in glob.glob(os.path.join(dest, 'updown_per_cluster_and_mode','*.csv'))]
+    combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
+    combined_csv.to_csv(os.path.join("updown_per_cluster_and_mode.csv"), index=False, encoding='utf-8')
+
+
+def process_file_enquete(f,dest):
+    print(f"-------------------{f}----------------------")
+    filename = os.path.basename(f).split('.')[0]
+    ep = EnqueteParser(f)
+    df_updown_per_cluster, df_updown_per_cluster_and_semline, df_updown_per_cluster_and_mode = ep.parse()
+    f1 = os.path.join(dest,'updown_per_cluster_inout',f'{filename}.csv')
+    f2 = os.path.join(dest, 'updown_per_cluster_and_semline', f'{filename}.csv')
+    f3 = os.path.join(dest, 'updown_per_cluster_and_mode', f'{filename}.csv')
+    df_updown_per_cluster.to_csv(f1, index=False, mode='w')
+    df_updown_per_cluster_and_semline.to_csv(f2, index=False, mode='w')
+    df_updown_per_cluster_and_mode.to_csv(f3, index=False, mode='w')
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    get_semitag_stop_times()
+    # get_semitag_stop_times()
+    parse_enquetes()
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
