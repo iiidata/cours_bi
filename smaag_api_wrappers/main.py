@@ -11,8 +11,28 @@ import sys
 
 import pandas as pd
 import requests
+import logging.config
+from logging import StreamHandler
+from logging.handlers import TimedRotatingFileHandler
 
 from enquete_parser import EnqueteParser
+
+############### LOGGING file #############
+logger = logging.getLogger()
+LOG_LEVEL = logging.INFO
+logger.setLevel(LOG_LEVEL)
+LOG_FORMAT = '%(asctime)s :: %(levelname)s :: %(message)s'
+LOG_DATE_FORMAT = '%d/%m/%Y %H:%M:%S'
+formatter = logging.Formatter(LOG_FORMAT)
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+LOG_DIRECTORY = os.path.join(basedir, 'logs')
+os.makedirs(LOG_DIRECTORY, exist_ok=True)
+file_handler = TimedRotatingFileHandler(filename=os.path.join(LOG_DIRECTORY,'wrapper.log'), when='h')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+LOG_LEVEL = logging.DEBUG
+logger.setLevel(LOG_LEVEL)
+logger.addHandler(logging.StreamHandler(stream=sys.stdout))
 
 API_SERVER = "https://data.mobilites-m.fr"
 
@@ -26,7 +46,7 @@ SMMAG_ENDPOINTS = {
     'cluster_stoptimes':'/api/routers/default/index/clusters/{cluster_id}/stoptimes'
 }
 
-PATH_FILE = {'SMAAG' : 'SMAAG'}
+PATH_FILE = 'data'
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 def call_api(endpoint, **kwargs):
@@ -123,7 +143,7 @@ def get_referentials():
     stop_occupancy_file = 'smmag_stop_occupancy.csv'
     cities_file = 'cities.csv'
 
-    if os.path.exists(os.path.join(basedir, PATH_FILE.get('SMAAG'), lines_file) ):
+    if os.path.exists(os.path.join(basedir, PATH_FILE, lines_file) ):
         df_lines = pd.read_csv(lines_file)
     else:
         df_lines = get_lines()
@@ -141,7 +161,7 @@ def get_referentials():
     # df_line_schedules = get_schedules(df_lines['id'].tolist())
     # df_line_schedules.to_csv(line_schedules_file, index=False)
 
-    if os.path.exists(os.path.join(basedir, PATH_FILE.get('SMAAG'), line_stops_file) ):
+    if os.path.exists(os.path.join(basedir, PATH_FILE, line_stops_file) ):
         df_linestops = pd.read_csv(line_stops_file)
 
     linestops = df_linestops['id'].drop_duplicates().tolist()
@@ -150,11 +170,11 @@ def get_referentials():
 
 
 def get_semitag_stop_times():
-    path = os.path.join(basedir, PATH_FILE.get('SMAAG'), 'smmag_line_clusters.csv')
+    path = os.path.join(basedir, PATH_FILE, 'smmag_line_clusters.csv')
     if os.path.exists(path):
         df_lineclusters = pd.read_csv(path)
         ## limit at SEMA
-        df_lineclusters[df_lineclusters['code'].str.contains('SEM:', na=True)]
+        df_lineclusters = df_lineclusters[df_lineclusters['code'].str.contains('SEM:', na=True)]
     lineclusters = df_lineclusters['code'].drop_duplicates().tolist()
     headers = {
         'origin': 'campus_num'
@@ -163,64 +183,70 @@ def get_semitag_stop_times():
     data = []
     for clust in lineclusters:
         call_datetime = datetime.datetime.now()
-        content = call_api(SMMAG_ENDPOINTS.get('cluster_stoptimes').format(cluster_id=clust), headers=headers)
-        if len(content) > 0:
-            for route in content:
-                pattern = route.get('pattern')
-                pattern_id = pattern.get('id')
-                pattern_desc = pattern.get('desc')
-                pattern_dir = pattern.get('dir')
-                pattern_last_stop = pattern.get('lastStop')
-                times = route.get('times')
-                for time in times:
-                    stop_id = time.get('stopId')
-                    scheduled_arrival = time.get('scheduledArrival')
-                    scheduled_departure = time.get('scheduledDeparture')
-                    realtime_arrival = time.get('realtimeArrival')
-                    realtime_departure = time.get('realtimeDeparture')
-                    arrival_delay = time.get('arrivalDelay')
-                    departure_delay = time.get('departureDelay')
-                    timepoint = time.get('timepoint')
-                    realtime = time.get('realtime')
-                    realtime_state = time.get('realtimeState')
-                    service_day = time.get('serviceDay')
-                    trip_id = time.get('tripId')
-                    headsign = time.get('headsign')
+        logger.debug(f'call cluster : {clust}')
+        try:
 
-                    row = {
-                        'call_timestamp':call_datetime,
-                        'cluster_id':clust,
-                        'pattern_id':pattern_id,
-                        'pattern_desc':pattern_desc,
-                        'pattern_dir':pattern_dir,
-                        'pattern_last_stop': pattern_last_stop,
-                        'stop_id': stop_id,
-                        'scheduled_arrival': scheduled_arrival,
-                        'scheduled_departure': scheduled_departure,
-                        'realtime_arrival': realtime_arrival,
-                        'realtime_departure': realtime_departure,
-                        'arrival_delay': arrival_delay,
-                        'departure_delay': departure_delay,
-                        'timepoint': timepoint,
-                        'realtime': realtime,
-                        'realtime_state': realtime_state,
-                        'service_day': service_day,
-                        'trip_id': trip_id,
-                        'headsign': headsign
-                    }
-                    data.append(row)
+            content = call_api(SMMAG_ENDPOINTS.get('cluster_stoptimes').format(cluster_id=clust), headers=headers)
+            if len(content) > 0:
+                for route in content:
+                    pattern = route.get('pattern')
+                    pattern_id = pattern.get('id')
+                    pattern_desc = pattern.get('desc')
+                    pattern_dir = pattern.get('dir')
+                    pattern_last_stop = pattern.get('lastStop')
+                    times = route.get('times')
+                    for time in times:
+                        stop_id = time.get('stopId')
+                        scheduled_arrival = time.get('scheduledArrival')
+                        scheduled_departure = time.get('scheduledDeparture')
+                        realtime_arrival = time.get('realtimeArrival')
+                        realtime_departure = time.get('realtimeDeparture')
+                        arrival_delay = time.get('arrivalDelay')
+                        departure_delay = time.get('departureDelay')
+                        timepoint = time.get('timepoint')
+                        realtime = time.get('realtime')
+                        realtime_state = time.get('realtimeState')
+                        service_day = time.get('serviceDay')
+                        trip_id = time.get('tripId')
+                        headsign = time.get('headsign')
 
+                        row = {
+                            'call_timestamp':call_datetime,
+                            'cluster_id':clust,
+                            'pattern_id':pattern_id,
+                            'pattern_desc':pattern_desc,
+                            'pattern_dir':pattern_dir,
+                            'pattern_last_stop': pattern_last_stop,
+                            'stop_id': stop_id,
+                            'scheduled_arrival': scheduled_arrival,
+                            'scheduled_departure': scheduled_departure,
+                            'realtime_arrival': realtime_arrival,
+                            'realtime_departure': realtime_departure,
+                            'arrival_delay': arrival_delay,
+                            'departure_delay': departure_delay,
+                            'timepoint': timepoint,
+                            'realtime': realtime,
+                            'realtime_state': realtime_state,
+                            'service_day': service_day,
+                            'trip_id': trip_id,
+                            'headsign': headsign
+                        }
+                        data.append(row)
+        except Exception as e:
+            logger.info(e)
     df = pd.DataFrame(data)
-    df.to_csv('cluster_stoptimes_realtime.csv', index=False, mode='a')
+    path = os.path.join(basedir, PATH_FILE, 'smmag_line_clusters.csv')
+    df.to_csv(path, index=False, mode='a')
 
 
 def parse_enquetes():
 
-    enquetes_dir = 'data/enquetes/'
-    dest = os.path.join(basedir, os.path.join(basedir, os.curdir),'temp_files')
-    d1 = os.path.join(basedir, dest, 'updown_per_cluster_inout')
-    d2 = os.path.join(basedir, dest, 'updown_per_cluster_and_semline')
-    d3 = os.path.join(basedir, dest, 'updown_per_cluster_and_mode')
+    # enquetes_dir = 'enquetes/'
+    enquetes_dir = ''
+    dest = os.path.join(basedir, PATH_FILE ,'temp_files')
+    d1 = os.path.join(dest, 'updown_per_cluster_inout')
+    d2 = os.path.join(dest, 'updown_per_cluster_and_semline')
+    d3 = os.path.join(dest, 'updown_per_cluster_and_mode')
 
     os.makedirs(dest, exist_ok=True)
     os.makedirs(d1, exist_ok=True)
@@ -228,7 +254,7 @@ def parse_enquetes():
     os.makedirs(d3, exist_ok=True)
 
     p = multiprocessing.Pool()
-    for filename in os.listdir(enquetes_dir):
+    for filename in os.listdir(os.path.join(basedir, PATH_FILE, enquetes_dir)):
         # launch a process for each file (ish).
         # The result will be approximately one process per CPU core available.
         f = os.path.join(basedir, enquetes_dir, filename)
@@ -251,7 +277,7 @@ def parse_enquetes():
 
 
 def process_file_enquete(f,dest):
-    print(f"-------------------{f}----------------------")
+    logger.info(f"-------------------{f}----------------------")
     filename = os.path.basename(f).split('.')[0]
     ep = EnqueteParser(f)
     df_updown_per_cluster, df_updown_per_cluster_and_semline, df_updown_per_cluster_and_mode = ep.parse()
@@ -264,8 +290,16 @@ def process_file_enquete(f,dest):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    logger.info('start collect stop time')
+    start = datetime.datetime.now()
     get_semitag_stop_times()
+    end = datetime.datetime.now()
+    logger.info(f'finish collect stop time : {end}')
+    logger.info('start pase enquetes')
+    start = datetime.datetime.now()
     parse_enquetes()
+    end = datetime.datetime.now()
+    logger.info(f'finish parse stop time : {end}')
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
