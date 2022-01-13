@@ -1,0 +1,21 @@
+
+version: 2
+
+models:
+  - name: dim_line
+    description: "Dimension transport line."
+    columns:
+      - name: line_id
+        description: "Transport line unique ID"
+        tests:
+          - unique
+          - not_null
+  - name: dim_stop
+    description: "Dimension transport stop."
+    columns:
+      - name: stop_id
+        description: "Stop unique ID"
+        tests:
+          - unique
+          - not_null
+
