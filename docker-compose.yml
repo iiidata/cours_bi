@@ -22,7 +22,7 @@ x-airflow-common:
   volumes:
     - ./dags:/opt/airflow/dags
     - ./airflow_logs:/opt/airflow/logs
-    - ${referentials_files:-./../referentials/}:/referentials
+    - ${referentials_files:-./smaag_api_wrappers/data/}:/data
     - ${DOCKER_SOCK:-/var/run/docker.sock:/var/run/docker.sock}
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -298,6 +298,18 @@ services:
   #     - ${referentials_files}:/referentials
   #   networks:
   #     - host
+
+  wrappers:
+    container_name: wrappers-cours
+    restart: always
+    build:
+      context: smaag_api_wrappers/
+      dockerfile: Dockerfile
+    ports:
+      - "9758:9758"
+    networks:
+      - host
+
 
   airbyte-init:
     container_name: airbyte-init-cours
